@@ -1,0 +1,41 @@
+module;
+
+import lib.ft4.core.accounts.{ account };
+
+
+entity user {
+  key eth_address: byte_array;
+  key account;
+  created_at: integer;
+  mutable contact_info: text = "n/a";
+}
+
+entity pgp_public_key {
+  key user;
+  index user;
+  mutable public_key: text;
+  mutable key_type: key_type;
+  mutable key_status: key_status;
+  mutable created_at: integer;
+}
+
+enum key_status {
+  active,
+  revoked
+}
+
+enum key_type {
+  rsa_encrypt_or_sign, // id 1
+  rsa_encrypt_only, // id 2
+  rsa_sign_only, // id 3
+  elgamal_encrypt_only, // id 16
+  dsa_digital_signature_algorithm, // id 17
+  ecdh_public_key_algorithm, // id 18
+  ecdsa_public_key_algorithm, // id 19
+  eddsalegacy_deprecated, // id 22
+  x25519, // id 25
+  x448, // id 26
+  ed25519, // id 27
+  ed448, // id 28
+  unknown
+}

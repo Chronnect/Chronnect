@@ -1,0 +1,32 @@
+{
+  "name": "chronnect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "babel-loader": "^9.1.3",
+    "crypto-browserify": "^3.12.0",
+    "rimraf": "^5.0.7",
+    "ts-loader": "^6.2.2",
+    "typescript": "^5.5.2",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@chromia/ft4": "^0.8.0",
+    "buffer": "^6.0.3",
+    "npm": "^10.8.1",
+    "postchain-client": "^1.17.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "vm-browserify": "^1.1.2"
+  }
+}

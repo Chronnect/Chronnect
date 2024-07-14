@@ -1,0 +1,56 @@
+module;
+
+import entities.*;
+
+
+function sanitize_input(raw_user_input: text): text {
+    return raw_user_input.replace('&', '&amp;')
+                         .replace('<', '&lt;')
+                         .replace('>', '&gt;')
+                         .replace('"', '&quot;')
+                         .replace('\'', '&#x27;')
+                         .trim();
+}
+
+function is_valid_pgp_public_key(public_key: text): boolean {
+    if(public_key.starts_with('-----BEGIN PGP PUBLIC KEY BLOCK-----') and
+       public_key.ends_with('-----END PGP PUBLIC KEY BLOCK-----') and
+       not pgp_public_key_to_byte_array(public_key).empty()) { // includes base64 check
+        return true;
+    } else return false;
+}
+
+function determine_pgp_public_key_type(public_key: text): key_type {
+    val key_content_bytes: byte_array = pgp_public_key_to_byte_array(public_key);
+
+    if (key_content_bytes[3] != 4) { // https://datatracker.ietf.org/doc/html/rfc4880#section-5.5.2 
+        return key_type.unknown;
+    }
+
+    val key_type_byte: integer = key_content_bytes[8];
+
+    when(key_type_byte) {
+        1 -> return key_type.rsa_encrypt_or_sign;
+        2 -> return key_type.rsa_encrypt_only;
+        3 -> return key_type.rsa_sign_only;
+        16 -> return key_type.elgamal_encrypt_only;
+        17 -> return key_type.dsa_digital_signature_algorithm;
+        18 -> return key_type.ecdh_public_key_algorithm;
+        19 -> return key_type.ecdsa_public_key_algorithm;
+        22 -> return key_type.eddsalegacy_deprecated;
+        25 -> return key_type.x25519;
+        26 -> return key_type.x448;
+        27 -> return key_type.ed25519;
+        28 -> return key_type.ed448;
+        else -> return key_type.unknown;
+    }
+}
+
+function pgp_public_key_to_byte_array(public_key: text): byte_array {
+    return byte_array.from_base64(public_key.replace('-----BEGIN PGP PUBLIC KEY BLOCK-----', '')
+                                            .replace('-----END PGP PUBLIC KEY BLOCK-----', '')
+                                            .replace('\n', '')
+                                            .replace('\r', '')
+                                            .trim()
+                                            .split('=')[0]); // remove PGP key checksum
+}

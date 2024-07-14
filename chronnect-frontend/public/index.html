@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Chronnect</title>
+      <meta name="description" content="Explore Chronnect, a decentralized PGP public key server built on the Chromia network. Secure and manage your digital communications with enhanced transparency and control.">
+      <meta name="robots" content="index, follow">
+      <link rel="canonical" href="https://chronnect.net/index.html">
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <link rel="stylesheet" href="/css/style.css">
+   </head>
+   <body>
+      <header>
+         <div class="logo-container">
+            <a href="index.html">
+            <img src="images/ct-logo.png" alt="Chronnect Logo">
+            </a>
+         </div>
+         <button class="menu-toggle" id="menu-toggle">&#9776;</button>
+         <nav class="main-nav" id="main-nav">
+            <ul>
+               <li><a href="#search-section" class="nav-link">Search</a></li>
+               <li><a href="#publish-section" class="nav-link">Publish</a></li>
+               <li><a href="#api-section" class="nav-link">API</a></li>
+               <li><a href="https://github.com/Chronnect/Chronnect" target="_blank" class="nav-link">GitHub</a></li>
+               <li><a href="/legal-notice.pdf" target="_blank" class="nav-link">Legal</a></li>
+            </ul>
+         </nav>
+      </header>
+      <main>
+         <section id="intro-section" class="content-section active">
+            <div class="container">
+               <div class="text-content">
+                  <h1>Decentralized PGP Public Key Server on the Chromia Network</h1>
+                  <p>Enhance your digital security with a blockchain-based PGP key server. Manage your public keys seamlessly through your wallet on the secure, decentralized Chromia network. Embrace transparency and control in managing your digital communications.</p>
+               </div>
+               <div class="image-content">
+                  <img src="images/ct-welcome.webp" alt="Abstract image symbolizing communication">
+               </div>
+            </div>
+         </section>
+         <section id="search-section" class="content-section">
+            <div class="container">
+               <div class="text-content">
+                  <h1>Search</h1>
+                  <p>Enter an ETH address to locate the associated PGP public key and contact info:</p>
+                  <form id="search-form">
+                     <div class="input-group">
+                        <input type="text" id="eth-address" name="eth-address" placeholder="0x123456789ABCDEF123456789ABCDEF1234567890" maxlength="42">
+                     </div>
+                     <button type="submit" id="search-button">Search</button>
+                  </form>
+                  <div id="results-container" class="results-container">
+                     <table id="results-contact-info" class="results-table"></table>
+                     <table id="results-key-info" class="results-table">
+                        <tr>
+                           <th>Created At</th>
+                           <th>Status</th>
+                           <th>Type</th>
+                        </tr>
+                        <tr id="key-details"></tr>
+                        <tr>
+                           <th colspan="3">Public Key</th>
+                        </tr>
+                        <tr>
+                           <td colspan="3" id="public-key-content"></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <section id="publish-section" class="content-section">
+            <div class="container">
+               <div class="text-content">
+                  <h1>Publish</h1>
+                  <p>Link your wallet to a PGP public key, establish your initial contact details, or update your existing data. Options include publishing just the public key, both the public key and initial contact details, or only updating your contact information:</p>
+                  <form id="publish-form">
+                     <div class="input-group">
+                        <textarea id="pgp-key" name="pgp-key" rows="10" placeholder="PGP public key"></textarea>
+                     </div>
+                     <div class="input-group">
+                        <textarea id="contact-info" name="contact-info" rows="4" placeholder="Contact information" maxlength="364"></textarea>
+                     </div>
+                     <button type="submit" id="publish-button">Publish</button>
+                  </form>
+               </div>
+            </div>
+         </section>
+         <section id="api-section" class="content-section">
+            <div class="container">
+               <div class="text-content">
+                  <h1>API Information</h1>
+                  <p>Use the following requests to retrieve information linked to an ETH address, including contact details and the associated PGP Public Key. Please note that in the examples provided, the ETH address is passed to the interface without the leading '0x'.</p>
+                  <h3>Fetch Contact Info by ETH Address</h3>
+                  <pre><code>curl -X POST "https://node0.projectnet.chromia.dev:7740/query/A96C12971ED1C2036C762A99909121CDD39C62B000BEAE982B529CFE6F61398F" \
+	-H "accept: application/json" \
+	-H "content-type: application/json" \
+	-d '{"type":"fetch_contact_info_by_eth","eth_address":"9657d0E9B4F2A4031a79bC603Ca3A1b9cd46fAc9"}'</code></pre>
+                  <h3>Fetch PGP Public Key by ETH Address</h3>
+                  <pre><code>curl -X POST "https://node0.projectnet.chromia.dev:7740/query/A96C12971ED1C2036C762A99909121CDD39C62B000BEAE982B529CFE6F61398F" \
+	-H "accept: application/json" \
+	-H "content-type: application/json" \
+	-d '{"type":"fetch_pgp_public_key_by_eth","eth_address":"9657d0E9B4F2A4031a79bC603Ca3A1b9cd46fAc9"}'</code></pre>
+               </div>
+            </div>
+         </section>
+      </main>
+      <script type="module" src="build/index.js"></script>
+   </body>
+</html>

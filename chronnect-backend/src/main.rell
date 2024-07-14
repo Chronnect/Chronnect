@@ -1,0 +1,49 @@
+module;
+
+import entities.*;
+import lib.ft4.auth;
+import utils.*;
+import register.*;
+
+
+operation publish_pgp_public_key(raw_public_key: text) {
+  val account = auth.authenticate();
+
+  val public_key: text = sanitize_input(raw_public_key);
+  require(not public_key.empty(), "Your PGP Public Key cannot be empty.");
+  require(is_valid_pgp_public_key(public_key) and public_key.size() <= 10000, "Your PGP public key is invalid. Please verify and try again.");
+
+  var created_at: integer = op_context.last_block_time;
+  val existing_public_key: pgp_public_key? = pgp_public_key @? { user @ { account } };
+  val pgp_public_key_type: key_type = determine_pgp_public_key_type(public_key);
+  
+  if (existing_public_key != null) {
+    update existing_public_key ( public_key, key_type = pgp_public_key_type, key_status = key_status.active, created_at);
+  } else {
+    create pgp_public_key ( user @ { account }, public_key, key_type = pgp_public_key_type, key_status = key_status.active, created_at);
+  }
+}
+
+operation publish_contact_info(raw_contact_info: text) {
+  val account = auth.authenticate();
+
+  val contact_info: text = sanitize_input(raw_contact_info);
+  require(contact_info.size() <= 364, "Your contact info cannot be longer than 364 letters.");
+
+  update user @ { account } ( contact_info );
+}
+
+query fetch_contact_info_by_eth(eth_address: byte_array) {
+ return user @ { .eth_address == eth_address } (
+    .contact_info
+  );
+}
+
+query fetch_pgp_public_key_by_eth(eth_address: byte_array) {
+ return pgp_public_key @ { .user.eth_address == eth_address } (
+    .public_key,
+    .key_type,
+    .key_status,
+    .created_at
+  );
+}
